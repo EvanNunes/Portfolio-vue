@@ -1,7 +1,7 @@
 <script setup>
 import { useGsap } from '../../composables/useGsap'
 
-useGsap(({ gsap }) => {
+useGsap(({ gsap, ScrollTrigger }) => {
   const h1 = document.querySelector('.hero h1')
   const others = document.querySelectorAll('.hero p, .hero .btn')
 
@@ -23,6 +23,17 @@ useGsap(({ gsap }) => {
       duration: 0.7
     })
   }
+
+  gsap.to('.scroll-indicator', {
+    opacity: 0,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.hero',
+      start: 'top top',
+      end: '+=120',
+      scrub: true
+    }
+  })
 })
 </script>
 
@@ -54,6 +65,10 @@ useGsap(({ gsap }) => {
           <img src="/img/evan.png" alt="moi" class="avatar">
         </div>
       </div>
+    </div>
+
+    <div class="scroll-indicator" aria-hidden="true">
+      <div class="scroll-indicator__chevron"></div>
     </div>
   </section>
 </template>
