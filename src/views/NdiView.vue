@@ -121,8 +121,7 @@ useGsap(({ gsap, ScrollTrigger }) => {
     <section class="about-section" id="about">
       <div class="about-container">
         <h2 class="about-title">
-          <span>Le </span>
-          <span class="highlight">Projet</span>
+          <span>Le&nbsp;</span><span class="highlight">Projet</span>
         </h2>
 
         <div class="about-line"></div>

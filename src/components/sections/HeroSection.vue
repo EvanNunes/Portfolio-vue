@@ -1,5 +1,67 @@
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useGsap } from '../../composables/useGsap'
+
+const categories = [
+  { label: 'Web', skills: 'HTML • CSS • JS • TS • Vue • Angular • PHP • Symfony' },
+  { label: 'DevOps', skills: 'Docker • Git • CLI • Linux • CI/CD' },
+  { label: 'Logiciel', skills: 'Java • Python • C • Android' },
+  { label: 'Bases de données', skills: 'MySQL • PostgreSQL • MongoDB • Cassandra' },
+
+]
+
+const displayedLabel  = ref('')
+const displayedSkills = ref('')
+let timeoutId = null
+let catIndex  = 0
+
+function schedule(fn, delay) {
+  timeoutId = setTimeout(fn, delay)
+}
+
+function typeText(target, full, speed, onDone) {
+  let i = target.value.length
+  function step() {
+    if (i < full.length) {
+      target.value = full.slice(0, ++i)
+      schedule(step, speed)
+    } else {
+      onDone()
+    }
+  }
+  schedule(step, speed)
+}
+
+function eraseText(target, speed, onDone) {
+  function step() {
+    if (target.value.length > 0) {
+      target.value = target.value.slice(0, -1)
+      schedule(step, speed)
+    } else {
+      onDone()
+    }
+  }
+  schedule(step, speed)
+}
+
+function runCycle() {
+  const { label, skills } = categories[catIndex]
+  typeText(displayedLabel, label, 80, () => {
+    typeText(displayedSkills, skills, 40, () => {
+      schedule(() => {
+        eraseText(displayedSkills, 25, () => {
+          eraseText(displayedLabel, 25, () => {
+            catIndex = (catIndex + 1) % categories.length
+            runCycle()
+          })
+        })
+      }, 2500)
+    })
+  })
+}
+
+onMounted(() => runCycle())
+onUnmounted(() => clearTimeout(timeoutId))
 
 useGsap(({ gsap, ScrollTrigger }) => {
   const h1 = document.querySelector('.hero h1')
@@ -51,8 +113,8 @@ useGsap(({ gsap, ScrollTrigger }) => {
             Objectif : intégrer une école d'ingénieur.
           </p>
 
-          <p>
-            Compétences : HTML • CSS • JavaScript • PHP • MySQL • Docker • Java • Android • GLSL/WebGL
+          <p class="skills-typewriter">
+            Compétences <span class="tw-label">{{ displayedLabel }}</span><span v-if="displayedLabel"> : </span><span class="tw-skills">{{ displayedSkills }}</span><span class="tw-cursor">|</span>
           </p>
 
           <div class="mt-3">
@@ -72,3 +134,17 @@ useGsap(({ gsap, ScrollTrigger }) => {
     </div>
   </section>
 </template>
+
+<style scoped>
+.tw-label { color: var(--accent); font-weight: 600; }
+.tw-cursor {
+  display: inline-block;
+  animation: blink 0.7s step-end infinite;
+  color: var(--accent);
+  margin-left: 1px;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+</style>
