@@ -22,6 +22,10 @@ const router = createRouter({
       path: '/NDI',
       name: 'ndi',
       component: () => import('../views/NdiView.vue')
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/'
     }
   ],
   scrollBehavior(to, from, savedPosition) {
