@@ -24,6 +24,11 @@ const router = createRouter({
       component: () => import('../views/NdiView.vue')
     },
     {
+      path: '/portfolio-apprentissage',
+      name: 'learning-portfolio',
+      component: () => import('../views/LearningPortfolioView.vue')
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/'
     }
